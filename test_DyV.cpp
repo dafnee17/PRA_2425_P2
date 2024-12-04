@@ -1,7 +1,40 @@
-#include "DyV.h" // Incluir el archivo de cabecera
 #include <iostream>
 #include <vector>
+#include <chrono>
+#include "DyV.h" // Incluir el archivo de cabecera que contiene las implementaciones
 
+// Función para medir y mostrar el tiempo de ejecución de QuickSort
+template <typename T, typename PartitionFunc>
+void medirQuickSort(std::vector<T> vec, const std::string& descripcion, PartitionFunc partitionFunc) {
+    auto start = std::chrono::system_clock::now();
+    QuickSort(vec, 0, vec.size() - 1, partitionFunc);
+    auto end = std::chrono::system_clock::now();
+    std::chrono::duration<float, std::milli> duration = end - start;
+    std::cout << descripcion << " Time: " << duration.count() << " ms" << std::endl;
+}
+
+// Función para probar QuickSort con varios tipos de datos
+void probarQuickSort() {
+    // Datos de prueba
+    std::vector<int> enteros = {10, 7, 8, 9, 1, 5};
+    std::vector<float> flotantes = {4.5, 2.2, 5.1, 3.3, 1.1};
+    std::vector<char> caracteres = {'z', 'e', 'a', 'r', 'm'};
+
+    // Medir tiempos con diferentes estrategias de partición
+    medirQuickSort(enteros, "Enteros - Pivote primero", Partition_First<int>);
+    medirQuickSort(enteros, "Enteros - Pivote aleatorio", Partition_Random<int>);
+    medirQuickSort(enteros, "Enteros - Pivote central", Partition_Mid<int>);
+
+    medirQuickSort(flotantes, "Flotantes - Pivote primero", Partition_First<float>);
+    medirQuickSort(flotantes, "Flotantes - Pivote aleatorio", Partition_Random<float>);
+    medirQuickSort(flotantes, "Flotantes - Pivote central", Partition_Mid<float>);
+
+    medirQuickSort(caracteres, "Caracteres - Pivote primero", Partition_First<char>);
+    medirQuickSort(caracteres, "Caracteres - Pivote aleatorio", Partition_Random<char>);
+    medirQuickSort(caracteres, "Caracteres - Pivote central", Partition_Mid<char>);
+}
+
+// Función para probar la búsqueda binaria ascendente
 void probarBusquedaBinaria() {
     // Prueba con enteros (ascendente)
     std::vector<int> enteros = {1, 3, 5, 7, 9, 11};
@@ -22,6 +55,7 @@ void probarBusquedaBinaria() {
     std::cout << "Buscando 'b' (no está): " << BusquedaBinaria('b', caracteres, 0, caracteres.size() - 1) << std::endl;
 }
 
+// Función para probar la búsqueda binaria descendente
 void probarBusquedaBinaria_INV() {
     // Prueba con enteros (descendente)
     std::vector<int> enteros = {11, 9, 7, 5, 3, 1};
@@ -43,8 +77,14 @@ void probarBusquedaBinaria_INV() {
 }
 
 int main() {
+    // Probar QuickSort
+    probarQuickSort();
+
+    // Probar Búsqueda Binaria Ascendente
     probarBusquedaBinaria();
+
+    // Probar Búsqueda Binaria Descendente
     probarBusquedaBinaria_INV();
+
     return 0;
 }
-
